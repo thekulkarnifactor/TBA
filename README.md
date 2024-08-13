@@ -11,14 +11,17 @@ CREATE TABLE Employees (
     ManagerId INT NULL,
     Role NVARCHAR(50) NOT NULL CHECK (Role IN ('Admin', 'Manager', 'Employee'))
 );
-
-
+```
+### Teams Table
+```sql
 CREATE TABLE Teams (
     TeamId INT PRIMARY KEY IDENTITY(1,1),
     TeamName NVARCHAR(100) NOT NULL,
     ManagerId INT NOT NULL
 );
-
+```
+### Tasks Table
+```sql
 CREATE TABLE Tasks (
     TaskId INT PRIMARY KEY IDENTITY(1,1),
     Title NVARCHAR(200) NOT NULL,
@@ -29,7 +32,10 @@ CREATE TABLE Tasks (
     CreatedBy INT NOT NULL,
     CreatedDate DATETIME NOT NULL DEFAULT GETDATE()
 );
+```
 
+### TaskNotes Table
+```sql
 CREATE TABLE TaskNotes (
     NoteId INT PRIMARY KEY IDENTITY(1,1),
     TaskId INT NOT NULL,
@@ -37,7 +43,9 @@ CREATE TABLE TaskNotes (
     CreatedBy INT NOT NULL,
     CreatedDate DATETIME NOT NULL DEFAULT GETDATE()
 );
-
+```
+### TaskAttachments Table
+```sql
 CREATE TABLE TaskAttachments (
     AttachmentId INT PRIMARY KEY IDENTITY(1,1),
     TaskId INT NOT NULL,
@@ -45,8 +53,10 @@ CREATE TABLE TaskAttachments (
     UploadedBy INT NOT NULL,
     UploadedDate DATETIME NOT NULL DEFAULT GETDATE()
 );
-
--- Insert Employees
+```
+## Insert Values
+### Insert Employees
+```sql
 INSERT INTO Employees (Name, Email, Role) VALUES ('John Doe', 'john.doe@example.com', 'Admin');
 INSERT INTO Employees (Name, Email, Role) VALUES ('Jane Smith', 'jane.smith@example.com', 'Manager');
 -- Assume the ManagerId for Jane Smith is 2
@@ -58,17 +68,20 @@ INSERT INTO Employees (Name, Email, ManagerId, Role) VALUES ('Bob Taylor', 'bob.
 INSERT INTO Employees (Name, Email, ManagerId, Role) VALUES ('Charlie Green', 'charlie.green@example.com', 4, 'Employee');
 INSERT INTO Employees (Name, Email, Role) VALUES ('David White', 'david.white@example.com', 'Admin');
 INSERT INTO Employees (Name, Email, ManagerId, Role) VALUES ('Eve Black', 'eve.black@example.com', 2, 'Employee');
+```
 
--- Insert Teams
+### Insert Teams
+```sql
 -- Assume the ManagerId for Jane Smith is 2
 INSERT INTO Teams (TeamName, ManagerId) VALUES ('Development Team', 2);
 
 -- Additional Inserts
 INSERT INTO Teams (TeamName, ManagerId) VALUES ('Design Team', 4);
 INSERT INTO Teams (TeamName, ManagerId) VALUES ('QA Team', 2);
+```
 
-
--- Insert Tasks
+### Insert Tasks
+```sql
 -- Assume the EmployeeId for Sam Wilson is 3, and Jane Smith is 2
 INSERT INTO Tasks (Title, Description, AssignedTo, Status, DueDate, CreatedBy) 
 VALUES ('Complete Backend', 'Develop the API layer', 3, 'Pending', '2024-08-15', 2);
@@ -85,9 +98,10 @@ VALUES ('QA Testing', 'Perform QA testing on the new features', 6, 'Pending', '2
 
 INSERT INTO Tasks (Title, Description, AssignedTo, Status, DueDate, CreatedBy) 
 VALUES ('Database Optimization', 'Optimize the database queries', 7, 'Pending', '2024-08-28', 2);
+```
 
-
--- Insert Task Notes
+### Insert Task Notes
+```sql
 -- Assume TaskId for 'Design Homepage' is 1, and Sam Wilson (CreatedBy) is 3
 INSERT INTO TaskNotes (TaskId, Content, CreatedBy) 
 VALUES (1, 'Initial design draft completed.', 3);
@@ -98,9 +112,10 @@ VALUES (2, 'Started implementing the user authentication.', 5);
 
 INSERT INTO TaskNotes (TaskId, Content, CreatedBy) 
 VALUES (3, 'Test cases are prepared.', 6);
+```
 
-
--- Insert Task Attachments
+### Insert Task Attachments
+```sql
 -- Assume TaskId for 'Design Homepage' is 1, and Sam Wilson (UploadedBy) is 3
 INSERT INTO TaskAttachments (TaskId, FilePath, UploadedBy) 
 VALUES (1, '/uploads/design_homepage_v1.png', 3);
@@ -111,11 +126,12 @@ VALUES (2, '/uploads/api_implementation_docs.pdf', 5);
 
 INSERT INTO TaskAttachments (TaskId, FilePath, UploadedBy) 
 VALUES (3, '/uploads/qa_test_cases.xlsx', 6);
+```
 
 
-
-EXAMPLE API ENDPOINTS
---- GET Employees
+## EXAMPLE API ENDPOINTS
+### GET Employees
+```json 
     GET: https://localhost:7237/api/Employee
     RESPONSE:
     [
@@ -134,7 +150,9 @@ EXAMPLE API ENDPOINTS
             "role": "CEO"
         }
     ]
---- Get Employee by ID
+```
+### Get Employee by ID
+```json
     GET: https://localhost:7237/api/Employee/5
     RESPONSE:
     {
@@ -144,7 +162,9 @@ EXAMPLE API ENDPOINTS
         "managerId": 3,
         "role": "Developer"
     }
---- Create Employee
+```
+### Create Employee
+```json
     POST: https://localhost:7237/api/Employee
     PAYLOAD:
     {
@@ -162,7 +182,9 @@ EXAMPLE API ENDPOINTS
         "managerId": 3,
         "role": "Tester"
     }
---- Update Employee
+```
+### Update Employee
+```json
     PUT: https://localhost:7237/api/Employee/5
     {
         "employeeId": 5,
@@ -171,9 +193,10 @@ EXAMPLE API ENDPOINTS
         "managerId": 3,
         "role": "Senior Developer"
     }
+```
 
-
---- Delete Employee
+### Delete Employee
+```json
     DELETE: https://localhost:7237/api/Employee/5
     GET: https://localhost:7237/api/Report/TeamTaskReport
     {
@@ -203,3 +226,4 @@ EXAMPLE API ENDPOINTS
             "createdDate": "2024-08-13T13:48:43.457"
         }
     ]
+```
